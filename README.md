@@ -9,10 +9,10 @@ Start by cloning this repository to your local machine.
 ```sh
 git clone https://github.com/pebble-examples/timeline-tv-tracker.git
 ```
-Generate your unique `uuid` with `uuidgen` and follow our [Enabling the Timeline][timeline-enabling-guide] guide to get your timeline tokens.
+Generate your unique `UUID` with `uuidgen` and replace it in [appinfo.json](./pebble/appinfo.json). Then follow our [Enabling the Timeline][timeline-enabling-guide] guide to get your timeline tokens in order for the app to be able to send pins.
 
 ```sh
-uuidgen # copy the uuid returned by uuidgen and replace it in appinfo.json
+uuidgen # copy the UUID returned by uuidgen and replace it in appinfo.json
 ```
 
 Build the Pebble app and run it on the Basalt emulator.
@@ -28,6 +28,7 @@ Launch the Node.js backend application.
 ```sh
 cd timeline-tv-tracker/node/
 npm install
+export PEBBLE_TIMELINE_API_KEY=4e8d87150e2e6c12057da0e34c4d968e # the API key you got from the Pebble Developer Portal
 node app.js
 ```
 
