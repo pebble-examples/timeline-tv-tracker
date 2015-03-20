@@ -1,6 +1,6 @@
 # Timeline TV Tracker Example
 
-This example demonstrates the usage of topics and shared pins in the [Pebble timeline API][timeline-guides]. We also have [other examples][pebble-examples] showing you how to create user pins and push them directly from [PebbleKit JS][pebblekit-js].
+This example demonstrates the usage of topics and shared pins in the [Pebble timeline API][timeline-guides]. We also have [other examples][timeline-examples] showing you how to create user pins and push them directly from [PebbleKit JS][pebblekit-js].
 
 ## Getting Started
 
@@ -50,7 +50,7 @@ If you want to learn more about the new Pebble timeline API, check out our [Hell
 
 [MIT](./LICENSE)
 
-[pebble-examples]: https://github.com/pebble-examples
+[timeline-examples]: https://github.com/pebble-examples?query=timeline
 [pebblekit-js]: https://developer.getpebble.com/guides/js-apps/pebblekit-js
 [timeline-guides]: https://developer.getpebble.com/guides/timeline/
 [timeline-enabling-guide]: https://developer.getpebble.com/guides/timeline/timeline-enabling/
