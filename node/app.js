@@ -5,107 +5,77 @@ var Timeline = require('pebble-api');
 var app = express();
 app.set('port', (process.env.PORT || 5000));
 
+// create a new Timeline object with our API key keys passed as an enviornment variable
 var timeline = new Timeline({
   apiKey: process.env.PEBBLE_TIMELINE_API_KEY
 });
 
+var topic = 'GameOfThrones';
 var currentPeopleWatching = 0;
 
-var topics = ['GameOfThrones'];
+// create the pin
+var pin = new Timeline.Pin({
+  id: topic + '-S05E00',
+  time: date('tomorrow at 9pm'),
+  layout: new Timeline.Pin.Layout({
+    type: Timeline.Pin.LayoutType.GENERIC_PIN,
+    tinyIcon: Timeline.Pin.Icon.PIN,
+    title: 'Game of Thrones',
+    body: 'People currently watching: ' + currentPeopleWatching
+  })
+});
 
-var pinId = 'gameofthrones-pin-2';
-
-var now = new Date();
-
-var startAction = new Timeline.Pin.Action({
+// add actions to the pin
+pin.addAction(new Timeline.Pin.Action({
   type: Timeline.Pin.ActionType.OPEN_WATCH_APP,
   title: 'Start Watching',
   launchCode: 1
-});
-
-var stopAction = new Timeline.Pin.Action({
+})).addAction(new Timeline.Pin.Action({
   type: Timeline.Pin.ActionType.OPEN_WATCH_APP,
   title: 'Stop Watching',
   launchCode: 2
-});
+}));
 
-function getPinLayout() {
-  return new Timeline.Pin.Layout({
-    type: Timeline.Pin.LayoutType.GENERIC_PIN,
-    tinyIcon: Timeline.Pin.Icon.PIN,
-    title: 'Game Of Thrones',
-    body: 'Current people watching: ' + currentPeopleWatching
-  });
-}
 
 // handler for GET /
 app.get('/', function (req, res) {
-  res.send('Current people watching: ' + currentPeopleWatching);
+  res.send('People currently watching: ' + currentPeopleWatching);
 });
 
-app.get('/subscribe/:topic', function (req, res) {
-  // create the pin object
-  var pin = new Timeline.Pin({
-    id: pinId,
-    time: date('30 min'),
-    layout: getPinLayout()
-  });
+// handler for GET /:topic/start
+app.get('/:topic/start', function (req, res, next) {
 
-  // add actions
-  pin.addAction(startAction);
-  pin.addAction(stopAction);
-
-  // send the pin to everyone subscribed
-  timeline.sendSharedPin(topics, pin, function (err, body, resp) {
-    if (err) {
-      return console.error(err);
-    }
-
-    res.send('Status code: ' + resp.statusCode);
-  });
-});
-
-app.get('/start/:topic', function (req, res) {
+  // increment currentPeopleWatching
   currentPeopleWatching++;
 
-  // create the pin object
-  var pin = new Timeline.Pin({
-    id: pinId,
-    time: date('tomorrow at 9pm'),
-    layout: getPinLayout()
-  });
-
-  // add actions
-  pin.addAction(startAction);
-  pin.addAction(stopAction);
-
-  // send the pin to everyone subscribed
-  timeline.sendSharedPin(topics, pin, function (err, body, resp) {
-    if (err) {
-      return console.error(err);
-    }
-
-    res.send('Status code: ' + resp.statusCode);
-  });
+  // once done, continue to next handler so we don't duplicate code
+  next();
 });
 
-app.get('/stop/:topic', function (req, res) {
+// handler for GET /:topic/stop
+app.get('/:topic/stop', function (req, res, next) {
+
+  // decrement currentPeopleWatching but not less than 0
   currentPeopleWatching--;
-  if (currentPeopleWatching < 0) currentPeopleWatching = 0;
+  if (currentPeopleWatching < 0) {
+    currentPeopleWatching = 0;
+  }
 
-  // create the pin object
-  var pin = new Timeline.Pin({
-    id: pinId,
-    time: date('tomorrow at 9pm'),
-    layout: getPinLayout()
-  });
+  // once done, continue to next handler so we don't duplicate code
+  next();
+});
 
-  // add actions
-  pin.addAction(startAction);
-  pin.addAction(stopAction);
+// handler for /:topic/*
+app.get('/:topic/*', function (req, res) {
 
-  // send the pin to everyone subscribed
-  timeline.sendSharedPin(topics, pin, function (err, body, resp) {
+  // update the pin time
+  pin.time = date('tomorrow at 9pm');
+
+  // update the pin body
+  pin.layout.body = 'People currently watching: ' + currentPeopleWatching;
+
+  // send the pin to everyone subscribed to it
+  timeline.sendSharedPin([topic], pin, function (err, body, resp) {
     if (err) {
       return console.error(err);
     }
@@ -113,6 +83,7 @@ app.get('/stop/:topic', function (req, res) {
     res.send('Status code: ' + resp.statusCode);
   });
 });
+
 
 // start the webserver
 var server = app.listen(app.get('port'), function () {
