@@ -26,7 +26,7 @@ pebble install --emulator basalt
 Launch the Node.js backend application.
 
 ```sh
-cd timeline-tv-tracker/node/ 
+cd timeline-tv-tracker/node/
 npm install
 node app.js
 ```
@@ -34,6 +34,12 @@ node app.js
 Launch the app on the emulator. You should see a message telling you that you've subscribed to the `GameOfThrones` topic and that a pin has been sent to your timeline. Exit the app and press down to view the timeline. You should see your pin! (You may have to wait a minute or two and then exit and reload the timeline to see the pin.)
 
 The pin will tell how many people are currently watching and you can use the actions to increase or decrease that number. Since this is a shared pin, the actions will update the pin on everyone's timeline who is subscribed to the `GameOfThrones` topic.
+
+## Screenshots
+
+![](pebble/screenshots/screenshot1.png)&nbsp;
+![](pebble/screenshots/screenshot2.png)&nbsp;
+![](pebble/screenshots/screenshot3.png)&nbsp;
 
 ## Learning More
 
