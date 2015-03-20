@@ -7,7 +7,7 @@ function startWatching() {
   var xhr = new XMLHttpRequest();
 
   // construct the url for the api
-  var url = API_ROOT + '/start/' + topic;
+  var url = API_ROOT + '/' + topic + '/start';
 
   xhr.open('GET', url, true);
   xhr.onload = function() {
@@ -29,7 +29,7 @@ function stopWatching() {
   var xhr = new XMLHttpRequest();
 
   // construct the url for the api
-  var url = API_ROOT + '/stop/' + topic;
+  var url = API_ROOT + '/' + topic + '/stop';
 
   xhr.open('GET', url, true);
   xhr.onload = function() {
@@ -51,7 +51,7 @@ function subscribe() {
   var xhr = new XMLHttpRequest();
 
   // construct the url for the api
-  var url = API_ROOT + '/subscribe/' + topic;
+  var url = API_ROOT + '/' + topic + '/subscribe';
 
   xhr.open('GET', url, true);
   xhr.onload = function() {
