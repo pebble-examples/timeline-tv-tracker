@@ -1,0 +1,22 @@
+{
+  "uuid": "89bc7036-4f65-4211-8913-e73a76044770",
+  "shortName": "timeline-tv-tracker",
+  "longName": "timeline-tv-tracker",
+  "companyName": "Pebble Technology",
+  "versionCode": 1,
+  "versionLabel": "1.0",
+  "sdkVersion": "3",
+  "targetPlatforms": ["basalt"],
+  "watchapp": {
+    "watchface": false
+  },
+  "appKeys": {
+    "ready": 0,
+    "text": 1,
+    "action": 2,
+    "quit": 3
+  },
+  "resources": {
+    "media": []
+  }
+}

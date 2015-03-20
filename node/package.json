@@ -1,0 +1,19 @@
+{
+  "name": "timeline-tv-tracker",
+  "version": "0.0.1",
+  "description": "An example server app for Pebble timeline-tv-tracker example",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "date.js": "^0.2.0",
+    "express": "^4.0.0",
+    "pebble-api": "^0.0.1",
+    "request": "^2.53.0"
+  },
+  "engines": {
+    "node": "0.10.x"
+  },
+  "license": "MIT"
+}
