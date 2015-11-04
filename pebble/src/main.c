@@ -1,9 +1,9 @@
 #include <pebble.h>
 
-static Window *window;
-static TextLayer *text_layer;
+static Window *s_window;
+static TextLayer *s_text_layer;
 
-static char text[64];
+static char s_text_buffer[64];
 
 enum {
   APP_KEY_READY,
@@ -25,11 +25,11 @@ static void in_received_handler(DictionaryIterator *iter, void *context) {
     app_message_outbox_send();
   }
 
-  // update text
+  // update s_text_buffer
   tuple = dict_find(iter, APP_KEY_TEXT);
   if (tuple) {
-    snprintf(text, sizeof(text), "%s", tuple->value->cstring);
-    text_layer_set_text(text_layer, text);
+    snprintf(s_text_buffer, sizeof(s_text_buffer), "%s", tuple->value->cstring);
+    text_layer_set_text(s_text_layer, s_text_buffer);
   }
 
   // quit the app
@@ -41,35 +41,40 @@ static void in_received_handler(DictionaryIterator *iter, void *context) {
 
 static void window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
+  GRect bounds = layer_get_bounds(window_layer);
 
-  text_layer = text_layer_create(GRect(2, 32, 140, 120));
-  text_layer_set_text(text_layer, "Loading...");
-  text_layer_set_text_alignment(text_layer, GTextAlignmentCenter);
-  text_layer_set_background_color(text_layer, GColorClear);
-  text_layer_set_text_color(text_layer, GColorCeleste);
-  text_layer_set_font(text_layer, fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD));
-  layer_add_child(window_layer, text_layer_get_layer(text_layer));
+  s_text_layer = text_layer_create(grect_inset(bounds, GEdgeInsets(30, 3)));
+  text_layer_set_text(s_text_layer, "Loading...");
+  text_layer_set_text_alignment(s_text_layer, GTextAlignmentCenter);
+  text_layer_set_background_color(s_text_layer, GColorClear);
+  text_layer_set_text_color(s_text_layer, GColorCeleste);
+  text_layer_set_font(s_text_layer, fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD));
+  layer_add_child(window_layer, text_layer_get_layer(s_text_layer));
+
+#if defined(PBL_ROUND)
+  text_layer_enable_screen_text_flow_and_paging(s_text_layer, 5);
+#endif
 }
 
 static void window_unload(Window *window) {
-  text_layer_destroy(text_layer);
+  text_layer_destroy(s_text_layer);
 }
 
 static void init(void) {
-  window = window_create();
-  window_set_background_color(window, GColorCobaltBlue);
-  window_set_window_handlers(window, (WindowHandlers) {
+  s_window = window_create();
+  window_set_background_color(s_window, GColorCobaltBlue);
+  window_set_window_handlers(s_window, (WindowHandlers) {
     .load = window_load,
     .unload = window_unload,
   });
-  window_stack_push(window, false);
+  window_stack_push(s_window, false);
 
   app_message_register_inbox_received(in_received_handler);
   app_message_open(256, 256);
 }
 
 static void deinit(void) {
-  window_destroy(window);
+  window_destroy(s_window);
 }
 
 int main(void) {
